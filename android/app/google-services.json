@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "895904656268",
+    "project_id": "tech-week-4cecb",
+    "storage_bucket": "tech-week-4cecb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895904656268:android:9abb983d51b8d9677c44a9",
+        "android_client_info": {
+          "package_name": "com.example.jobify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO6RSpvCQIoAHIVHENNujt7figDCu7cEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
