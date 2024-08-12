@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobify/pages/details.dart';
 import 'package:jobify/pages/home_page.dart';
 import 'package:jobify/services/auth_service.dart';
 import 'package:sign_in_button/sign_in_button.dart';
@@ -43,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
               // Handle successful sign-in, e.g., navigate to the home page
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
+                MaterialPageRoute(builder: (context) => const DetailsPage()),
               );
             }
           },

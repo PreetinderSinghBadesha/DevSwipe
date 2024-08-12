@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:jobify/pages/profile_page.dart';
 
 List<CompanyData> fav = [];
 
@@ -136,9 +137,19 @@ class _HomePageState extends State<HomePage> {
                       fontSize: width / 15,
                     ),
                   ),
-                  Image.asset(
-                    "assets/Vector.png",
-                    width: 30,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfilePage(),
+                        ),
+                      );
+                    },
+                    child: Image.asset(
+                      "assets/Vector.png",
+                      width: 30,
+                    ),
                   )
                 ],
               ),
