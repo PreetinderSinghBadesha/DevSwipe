@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jobify/pages/details.dart';
-import 'package:jobify/pages/home_page.dart';
 import 'package:jobify/services/auth_service.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 

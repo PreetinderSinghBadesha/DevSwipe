@@ -1,32 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:jobify/models/user_model.dart';
 import 'package:jobify/pages/profile_page.dart';
-
-List<CompanyData> fav = [];
+import 'package:jobify/services/database_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
-}
-
-class CompanyData {
-  final String name;
-  final String imageUrl;
-  final String job;
-
-  CompanyData({required this.imageUrl, required this.name, required this.job});
-
-  factory CompanyData.fromDocument(DocumentSnapshot doc) {
-    return CompanyData(
-      imageUrl: doc['imageUrl'],
-      name: doc['name'],
-      job: doc['job'],
-    );
-  }
 }
 
 class QuarterCirclePainter extends CustomPainter {
@@ -68,37 +53,37 @@ class QuarterCirclePainter extends CustomPainter {
 }
 
 class _HomePageState extends State<HomePage> {
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel? _userModel;
+
+  final DatabaseService _databaseService = DatabaseService();
+
+  @override
+  void initState() {
+    super.initState();
+    if (user != null) {
+      _fetchUserDetails();
+    }
+  }
+
+  Future<void> _fetchUserDetails() async {
+    if (user != null) {
+      final userId = user!.uid;
+      _databaseService.getUserDetails(userId).listen((snapshot) {
+        if (snapshot.exists) {
+          setState(() {
+            _userModel = snapshot.data();
+          });
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
-    List<CompanyData> jobs = [
-      CompanyData(
-        imageUrl:
-            'https://res.cloudinary.com/dko0tsv0x/image/upload/v1722442704/tech%20week/crxbpkt2diatcv3n0sby.png',
-        name: 'Master Card',
-        job: 'Software Developer',
-      ),
-      CompanyData(
-        imageUrl:
-            'https://res.cloudinary.com/dko0tsv0x/image/upload/v1722442640/tech%20week/b5eispuhonlg0fjnonjd.png',
-        name: 'Glycon',
-        job: 'Data Scientist',
-      ),
-      CompanyData(
-        imageUrl:
-            'https://i.insider.com/53c9682ceab8ea606bfc6d9c?width=600&format=jpeg&auto=webp',
-        name: 'Slack',
-        job: 'App Developer',
-      ),
-      CompanyData(
-        imageUrl:
-            'https://inkbotdesign.com/wp-content/uploads/2023/08/nvidia-logo-design-tech-company-1024x536.webp',
-        name: 'Nvidia',
-        job: 'Robotics Engineer',
-      ),
-    ];
+    User? user = FirebaseAuth.instance.currentUser;
 
     return SafeArea(
       child: Scaffold(
@@ -142,12 +127,13 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const ProfilePage(),
+                          builder: (context) => ProfilePage(userDetails:_userModel!),
                         ),
                       );
                     },
-                    child: Image.asset(
-                      "assets/Vector.png",
+                    child: Image.network(
+                      user!.photoURL ??
+                          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
                       width: 30,
                     ),
                   )
@@ -157,14 +143,14 @@ class _HomePageState extends State<HomePage> {
             Container(
               width: width,
               height: height,
-              child: jobs.isEmpty
+              child: true
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
                   : SizedBox(
                       height: height / 2,
                       child: CardSwiper(
-                        cardsCount: jobs.length,
+                        cardsCount: 0,
                         allowedSwipeDirection:
                             const AllowedSwipeDirection.symmetric(
                           vertical: false,
@@ -195,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                                     width: width / 1.5,
                                     margin: EdgeInsets.only(top: width / 4),
                                     child: Image.network(
-                                      jobs[index].imageUrl,
+                                      "jobs[index].imageUrl",
                                       fit: BoxFit.fill,
                                     ),
                                   ),
@@ -219,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            jobs[index].name,
+                                            "jobs[index].name",
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: width / 15,
@@ -227,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                           Text(
-                                            jobs[index].job,
+                                            "jobs[index].job",
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: width / 25,
@@ -237,9 +223,7 @@ class _HomePageState extends State<HomePage> {
                                         ],
                                       ),
                                       GestureDetector(
-                                        onTap: () {
-                                          fav.add(jobs[index]);
-                                        },
+                                        onTap: () {},
                                         child: Container(
                                           width: width / 8,
                                           height: width / 8,

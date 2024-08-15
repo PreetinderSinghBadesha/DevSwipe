@@ -5,12 +5,14 @@ class UserModel {
   String linkedin;
   Map<String, ProjectModel>? projects;
   int numberProjects;
+  String? readme;
 
   UserModel({
     required this.github,
     required this.linkedin,
     this.projects,
     this.numberProjects = 0, 
+    this.readme,
   });
 
   UserModel.fromJson(Map<String, Object?> json)
@@ -22,7 +24,8 @@ class UserModel {
             ProjectModel.fromJson(value as Map<String, Object?>),
           ),
         ),
-        numberProjects = json['NumberProjects'] as int? ?? 0; 
+        numberProjects = json['NumberProjects'] as int? ?? 0,
+        readme = json['Readme'] as String?; 
 
   Map<String, Object?> toJson() {
     return {
@@ -30,6 +33,7 @@ class UserModel {
       'Linkedin': linkedin,
       'Projects': projects?.map((key, value) => MapEntry(key, value.toJson())),
       'NumberProjects': numberProjects, 
+      'Readme': readme,
     };
   }
 }

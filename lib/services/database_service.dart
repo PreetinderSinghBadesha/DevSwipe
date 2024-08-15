@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:jobify/models/project_model.dart';
 import 'package:jobify/models/user_model.dart';
 
@@ -10,6 +11,7 @@ class DatabaseService {
   final _firestore = FirebaseFirestore.instance;
   late final CollectionReference _userRef;
   late final CollectionReference _projectRef;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   DatabaseService() {
     _userRef =
@@ -45,6 +47,23 @@ class DatabaseService {
           toFirestore: (project, _) => project.toJson(),
         )
         .snapshots();
+  }
+
+  Future<String> uploadReadmeFile(String userId, String readmeContent) async {
+    try {
+      // Create a reference to the Firebase Storage location
+      final ref = _storage.ref().child('profileReadme').child('$userId.md');
+
+      // Upload the .md file
+      await ref.putString(readmeContent);
+
+      // Get the download URL of the uploaded file
+      String downloadUrl = await ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      throw Exception("Failed to upload ReadMe file: $e");
+    }
   }
 
   void addUser(UserModel userDetails, User? user) async {
