@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jobify/pages/details.dart';
 import 'package:jobify/services/auth_service.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,40 +12,59 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final AuthService authService = AuthService();
 
-  
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Container(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Center(
-          child: googleSignInButton(),
-        ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Container(
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset("assets/logo_2.png"),
+                signinWithGoogle(context)
+              ],
+            )),
       ),
     );
   }
 
-  Widget googleSignInButton() {
-    return Center(
-      child: SizedBox(
-        height: 50,
-        child: SignInButton(
-          Buttons.google,
-          text: "Sign in with Google",
-          onPressed: () async {
-            final userCredential = await authService.handleGoogleSignIn();
-            if (userCredential != null) {
-              // Handle successful sign-in, e.g., navigate to the home page
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const DetailsPage()),
-              );
-            }
-          },
+  GestureDetector signinWithGoogle(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        final userCredential = await authService.handleGoogleSignIn();
+        if (userCredential != null) {
+          // Handle successful sign-in, e.g., navigate to the home page
+          Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(builder: (context) => const DetailsPage()),
+          );
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width / 1.3,
+        height: MediaQuery.of(context).size.width / 7.5,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(34),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset("assets/google.png"),
+            Text(
+              "Sign in with Google",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: MediaQuery.of(context).size.width / 20,
+                fontWeight: FontWeight.w500,
+              ),
+            )
+          ],
         ),
       ),
     );
