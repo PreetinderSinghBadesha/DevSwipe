@@ -1,70 +1,65 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:jobify/pages/fav_page.dart';
 import 'package:jobify/pages/home_page.dart';
 
-class BottomNavigationBarExample extends StatefulWidget {
-  const BottomNavigationBarExample({super.key});
+class BottomNavbar extends StatefulWidget {
+  const BottomNavbar({super.key});
 
   @override
-  State<BottomNavigationBarExample> createState() =>
-      _BottomNavigationBarExampleState();
+  State<BottomNavbar> createState() => _BottomNavbarState();
 }
 
-class _BottomNavigationBarExampleState
-    extends State<BottomNavigationBarExample> {
+class _BottomNavbarState extends State<BottomNavbar> {
   int _selectedIndex = 0;
-
   List<Widget> pages = [
     const HomePage(),
-    const FavPage(),
+    const HomePage(),
+    const HomePage(),
     const HomePage(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width * 0.95;
     return Scaffold(
-      body: Center(
-        child: pages[_selectedIndex],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: Color.fromRGBO(54, 154, 160, 1),
-              size: 40,
-            ),
-            label: 'Home',
+      body: pages[_selectedIndex],
+      backgroundColor: const Color.fromRGBO(29, 29, 29, 1),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.black,
+        color: const Color.fromRGBO(111, 39, 152, 1),
+        animationDuration: const Duration(milliseconds: 500),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        items: [
+          Icon(
+            Icons.home,
+            size: (_selectedIndex == 0) ? width / 12 : width / 15,
+            color: Colors.white,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.favorite,
-              color: Color.fromRGBO(54, 154, 160, 1),
-              size: 40,
-            ),
-            label: 'favourate',
+          Icon(
+            Icons.location_on,
+            size: (_selectedIndex == 1) ? width / 12 : width / 15,
+            color: Colors.white,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.settings,
-              color: Color.fromRGBO(54, 154, 160, 1),
-              size: 40,
-            ),
-            label: 'setting',
+          Icon(
+            Icons.qr_code_sharp,
+            size: (_selectedIndex == 2) ? width / 12 : width / 15,
+            color: Colors.white,
+          ),
+          // Icon(
+          //   Icons.event,
+          //   size: (_selectedIndex == 3) ? width / 12 : width / 15,
+          //   color: Colors.white,
+          // ),
+          Icon(
+            Icons.notifications,
+            size: (_selectedIndex == 4) ? width / 12 : width / 15,
+            color: Colors.white,
           ),
         ],
-        currentIndex: _selectedIndex,
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
-        backgroundColor: const Color.fromRGBO(241, 255, 231, 1),
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
       ),
     );
   }

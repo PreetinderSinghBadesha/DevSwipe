@@ -1,11 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:jobify/models/user_model.dart';
-import 'package:jobify/pages/profile_page.dart';
-import 'package:jobify/services/database_service.dart';
+import 'dart:math';
+
+// Define the ProjectModel class
+class ProjectModel {
+  String userId;
+  List<String> lang;
+  String? description;
+  DateTime startDate;
+  DateTime? closingDate;
+  int members;
+  String issuer;
+  String projectName;
+  String? githubLink;
+  String imageUrl;
+  int likes;
+  String? readme;
+
+  ProjectModel({
+    required this.userId,
+    required this.lang,
+    this.description,
+    required this.startDate,
+    this.closingDate,
+    this.members = 1,
+    required this.issuer,
+    required this.projectName,
+    this.githubLink,
+    required this.imageUrl,
+    this.likes = 0,
+    this.readme,
+  });
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,68 +41,63 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class QuarterCirclePainter extends CustomPainter {
-  final Color color;
-  final bool isTopRight;
-
-  QuarterCirclePainter({required this.color, required this.isTopRight});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color;
-    final path = Path();
-
-    if (isTopRight) {
-      path.moveTo(size.width, 0);
-      path.arcToPoint(
-        Offset(size.width, size.height),
-        radius: Radius.circular(size.width),
-        clockwise: false,
-      );
-      path.lineTo(size.width, 0);
-    } else {
-      path.moveTo(0, size.height);
-      path.arcToPoint(
-        Offset(size.width, size.height),
-        radius: Radius.circular(size.width),
-        clockwise: false,
-      );
-      path.lineTo(0, size.height);
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-}
-
 class _HomePageState extends State<HomePage> {
-  User? user = FirebaseAuth.instance.currentUser;
-  UserModel? _userModel;
-
-  final DatabaseService _databaseService = DatabaseService();
+  List<ProjectModel> projects = [];
+  User? user;
 
   @override
   void initState() {
     super.initState();
-    if (user != null) {
-      _fetchUserDetails();
-    }
+    _generateMockProjects();
   }
 
-  Future<void> _fetchUserDetails() async {
-    if (user != null) {
-      final userId = user!.uid;
-      _databaseService.getUserDetails(userId).listen((snapshot) {
-        if (snapshot.exists) {
-          setState(() {
-            _userModel = snapshot.data();
-          });
-        }
-      });
+  // Generate random project data
+  void _generateMockProjects() {
+    final random = Random();
+    const projectNames = [
+      "AI Research",
+      "Flutter App Development",
+      "Web Scraping",
+      "Blockchain Explorer",
+      "Game Development"
+    ];
+    const issuers = ["Google", "Microsoft", "Apple", "Amazon", "Facebook"];
+    const images = [
+      "https://firebasestorage.googleapis.com/v0/b/tech-week-4cecb.appspot.com/o/projectImages%2Fproj.jpg?alt=media&token=abb14c1a-3402-4150-8eb1-0f568d286f86",
+      "https://firebasestorage.googleapis.com/v0/b/tech-week-4cecb.appspot.com/o/projectImages%2FLinky.jpeg.jpg?alt=media&token=34a3d43f-226d-4f2d-b614-b9e5f7c73393",
+      "https://via.placeholder.com/400x300.png?text=Project+3",
+      "https://via.placeholder.com/400x300.png?text=Project+4",
+      "https://via.placeholder.com/400x300.png?text=Project+5"
+    ];
+    const langs = [
+      ["Dart", "Flutter"],
+      ["Python", "Django"],
+      ["JavaScript", "React"],
+      ["Solidity", "Ethereum"],
+      ["C++", "Unreal Engine"]
+    ];
+
+    for (int i = 0; i < 5; i++) {
+      projects.add(
+        ProjectModel(
+          userId: "user_${i + 1}",
+          lang: langs[i],
+          description: "A project on ${projectNames[i]}",
+          startDate:
+              DateTime.now().subtract(Duration(days: random.nextInt(100))),
+          closingDate: random.nextBool()
+              ? DateTime.now().add(Duration(days: random.nextInt(100)))
+              : null,
+          members: random.nextInt(10) + 1,
+          issuer: issuers[i],
+          projectName: projectNames[i],
+          githubLink:
+              "https://github.com/user_${i + 1}/${projectNames[i].toLowerCase().replaceAll(" ", "_")}",
+          imageUrl: images[i],
+          likes: random.nextInt(100),
+          readme: "This is the README for ${projectNames[i]}",
+        ),
+      );
     }
   }
 
@@ -83,7 +105,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    User? user = FirebaseAuth.instance.currentUser;
 
     return SafeArea(
       child: Scaffold(
@@ -93,21 +114,7 @@ class _HomePageState extends State<HomePage> {
               width: width,
               height: height,
               decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/back.png"),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -width / 3,
-              left: -width / 3,
-              child: CustomPaint(
-                size: Size(width / 1.5, width / 1.5),
-                painter: QuarterCirclePainter(
-                  color: const Color.fromRGBO(28, 46, 76, 1),
-                  isTopRight: false,
-                ),
+                color: Colors.black,
               ),
             ),
             Container(
@@ -115,26 +122,21 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Home",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: width / 15,
-                    ),
+                  Image.asset(
+                    "assets/logo_2.png",
+                    width: width / 5,
+                    height: width / 5,
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfilePage(userDetails:_userModel!),
-                        ),
-                      );
+                      // Navigate to profile page
                     },
-                    child: Image.network(
-                      user!.photoURL ??
-                          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-                      width: 30,
+                    child: CircleAvatar(
+                      radius: width / 20,
+                      backgroundImage: NetworkImage(
+                        user?.photoURL ??
+                            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                      ),
                     ),
                   )
                 ],
@@ -143,14 +145,14 @@ class _HomePageState extends State<HomePage> {
             Container(
               width: width,
               height: height,
-              child: true
+              child: projects.isEmpty
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
                   : SizedBox(
                       height: height / 2,
                       child: CardSwiper(
-                        cardsCount: 0,
+                        cardsCount: projects.length,
                         allowedSwipeDirection:
                             const AllowedSwipeDirection.symmetric(
                           vertical: false,
@@ -167,26 +169,17 @@ class _HomePageState extends State<HomePage> {
                           width: width / 1.2,
                           height: height / 2,
                           decoration: BoxDecoration(
-                            color: const Color.fromRGBO(73, 109, 142, 1),
+                            color: const Color.fromARGB(172, 28, 31, 34),
                             borderRadius: BorderRadius.circular(30),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                projects[index].imageUrl,
+                              ),
+                              fit: BoxFit.fill,
+                            ),
                           ),
                           child: Stack(
                             children: [
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(24),
-                                  child: Container(
-                                    height: height / 4,
-                                    width: width / 1.5,
-                                    margin: EdgeInsets.only(top: width / 4),
-                                    child: Image.network(
-                                      "jobs[index].imageUrl",
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                              ),
                               Positioned(
                                 bottom: 10,
                                 child: SizedBox(
@@ -205,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "jobs[index].name",
+                                            projects[index].projectName,
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: width / 15,
@@ -213,7 +206,15 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                           Text(
-                                            "jobs[index].job",
+                                            "Issuer: ${projects[index].issuer}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: width / 25,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Likes: ${projects[index].likes}",
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: width / 25,
@@ -223,7 +224,11 @@ class _HomePageState extends State<HomePage> {
                                         ],
                                       ),
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          setState(() {
+                                            projects[index].likes++;
+                                          });
+                                        },
                                         child: Container(
                                           width: width / 8,
                                           height: width / 8,
