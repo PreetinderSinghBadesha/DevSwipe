@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'dart:math';
 
@@ -166,109 +168,174 @@ class _HomePageState extends State<HomePage> {
                         ),
                         cardBuilder: (context, index, percentThresholdX,
                                 percentThresholdY) =>
-                            Container(
-                          width: width / 1.2,
-                          height: height / 2,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(172, 28, 31, 34),
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              width: 1.5,
-                              color: Colors.white,
-                            ),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                projects[index].imageUrl,
-                              ),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                left: 0,
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(1, 1, 1, 0.457),
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(30),
-                                      bottomRight: Radius.circular(30),
-                                    ),
-                                  ),
-                                  width: width / 1.2,
-                                  height: width / 3,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            projects[index].projectName,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: width / 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            "Issuer: ${projects[index].issuer}",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: width / 25,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          Text(
-                                            "Likes: ${projects[index].likes}",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: width / 25,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            projects[index].likes++;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: width / 8,
-                                          height: width / 8,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            color: const Color.fromARGB(
-                                                255, 191, 104, 241),
-                                          ),
-                                          child: const Icon(
-                                            Icons.favorite,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                            customSwipeableCard(width, height, index),
                       ),
                     ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container customSwipeableCard(double width, double height, int index) {
+    return Container(
+      width: width / 1.2,
+      height: height / 2,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(172, 28, 31, 34),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          width: 1.5,
+          color: Colors.white,
+        ),
+        image: DecorationImage(
+          image: NetworkImage(
+            projects[index].imageUrl,
+          ),
+          fit: BoxFit.fill,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: width / 30,
+            right: width / 30,
+            child: Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: width / 150,
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: width / 100,
+                horizontal: width / 50,
+              ),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 160, 49, 215),
+                border: Border.all(
+                  width: 1,
+                  color: Colors.white,
+                ),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Text(
+                "Project",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: width / 25,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            left: 0,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(1, 1, 1, 0.457),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: width / 30,
+              ),
+              width: width / 1.2,
+              height: width / 3,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          projects[index].projectName,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: width / 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          "Owner: ${projects[index].issuer}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: width / 25,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: width / 60),
+                        SizedBox(
+                          width: width / 2,
+                          height: width / 13,
+                          child: ListView.builder(
+                            itemCount: 3,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return languageCard(width);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        projects[index].likes++;
+                      });
+                    },
+                    child: Container(
+                      width: width / 8,
+                      height: width / 8,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: const Color.fromARGB(255, 160, 49, 215),
+                      ),
+                      child: const Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container languageCard(double width) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: width / 150,
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: width / 100,
+        horizontal: width / 50,
+      ),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 160, 49, 215),
+        border: Border.all(
+          width: 1,
+          color: Colors.white,
+        ),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: const Text(
+        "Python",
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
