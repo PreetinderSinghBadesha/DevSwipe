@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jobify/models/user_model.dart';
+import 'package:jobify/pages/home_page.dart';
 import 'package:jobify/services/database_service.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -186,6 +187,10 @@ class _DetailsPageState extends State<DetailsPage> {
                         );
                       }
                     }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomePage()));
                   },
                   child: const Text("Enter"),
                 ),
