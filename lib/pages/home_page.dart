@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'dart:math';
 
-// Define the ProjectModel class
 class ProjectModel {
   String userId;
   List<String> lang;
@@ -65,7 +64,7 @@ class _HomePageState extends State<HomePage> {
     const images = [
       "https://firebasestorage.googleapis.com/v0/b/tech-week-4cecb.appspot.com/o/projectImages%2Fproj.jpg?alt=media&token=abb14c1a-3402-4150-8eb1-0f568d286f86",
       "https://firebasestorage.googleapis.com/v0/b/tech-week-4cecb.appspot.com/o/projectImages%2FLinky.jpeg.jpg?alt=media&token=34a3d43f-226d-4f2d-b614-b9e5f7c73393",
-      "https://via.placeholder.com/400x300.png?text=Project+3",
+      "https://firebasestorage.googleapis.com/v0/b/tech-week-4cecb.appspot.com/o/projectImages%2FScreenshot%202024-08-25%20160359.png?alt=media&token=b60cfaea-66e4-42e9-b0b7-657923380aeb",
       "https://via.placeholder.com/400x300.png?text=Project+4",
       "https://via.placeholder.com/400x300.png?text=Project+5"
     ];
@@ -142,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               width: width,
               height: height,
               child: projects.isEmpty
@@ -159,6 +158,8 @@ class _HomePageState extends State<HomePage> {
                           horizontal: true,
                         ),
                         isLoop: false,
+                        numberOfCardsDisplayed: 2,
+                        backCardOffset: Offset(-width / 15, width / 10),
                         padding: EdgeInsets.symmetric(
                           vertical: width / 4,
                           horizontal: width / 10,
@@ -171,6 +172,10 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(172, 28, 31, 34),
                             borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              width: 1.5,
+                              color: Colors.white,
+                            ),
                             image: DecorationImage(
                               image: NetworkImage(
                                 projects[index].imageUrl,
@@ -181,10 +186,19 @@ class _HomePageState extends State<HomePage> {
                           child: Stack(
                             children: [
                               Positioned(
-                                bottom: 10,
-                                child: SizedBox(
+                                bottom: 0,
+                                right: 0,
+                                left: 0,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(1, 1, 1, 0.457),
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(30),
+                                      bottomRight: Radius.circular(30),
+                                    ),
+                                  ),
                                   width: width / 1.2,
-                                  height: width / 2,
+                                  height: width / 3,
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -200,7 +214,7 @@ class _HomePageState extends State<HomePage> {
                                           Text(
                                             projects[index].projectName,
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: Colors.white,
                                               fontSize: width / 15,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -208,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                                           Text(
                                             "Issuer: ${projects[index].issuer}",
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: Colors.white,
                                               fontSize: width / 25,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -216,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                                           Text(
                                             "Likes: ${projects[index].likes}",
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: Colors.white,
                                               fontSize: width / 25,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -235,8 +249,8 @@ class _HomePageState extends State<HomePage> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(100),
-                                            color: const Color.fromRGBO(
-                                                28, 46, 76, 1),
+                                            color: const Color.fromARGB(
+                                                255, 191, 104, 241),
                                           ),
                                           child: const Icon(
                                             Icons.favorite,
