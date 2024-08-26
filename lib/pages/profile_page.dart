@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:jobify/models/user_model.dart';
 import 'package:jobify/pages/details.dart';
 
+// ignore: must_be_immutable
 class ProfilePage extends StatefulWidget {
   UserModel userDetails;
   ProfilePage({super.key, required this.userDetails});
