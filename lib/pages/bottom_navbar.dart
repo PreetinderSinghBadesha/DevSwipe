@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:jobify/pages/add_project.dart';
 import 'package:jobify/pages/home_page.dart';
 
 class BottomNavbar extends StatefulWidget {
@@ -13,7 +14,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   int _selectedIndex = 0;
   List<Widget> pages = [
     const HomePage(),
-    const HomePage(),
+    const AddProject(),
     const HomePage(),
     const HomePage(),
   ];

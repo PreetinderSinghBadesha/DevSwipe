@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:jobify/firebase_options.dart';
+import 'package:jobify/pages/add_project.dart';
 import 'package:jobify/pages/bottom_navbar.dart';
 import 'package:jobify/pages/login_page.dart';
 import 'package:jobify/services/auth_service.dart';
