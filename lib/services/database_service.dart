@@ -66,6 +66,8 @@ class DatabaseService {
     }
   }
 
+  
+
   void addUser(UserModel userDetails, User? user) async {
     await _userRef.doc(user!.uid).set(userDetails);
   }
