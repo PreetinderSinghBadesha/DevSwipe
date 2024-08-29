@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jobify/models/user_model.dart';
+import 'package:jobify/pages/bottom_navbar.dart';
 import 'package:jobify/pages/home_page.dart';
 import 'package:jobify/services/database_service.dart';
 
@@ -190,7 +191,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomePage()));
+                            builder: (context) => const BottomNavbar()));
                   },
                   child: const Text("Enter"),
                 ),
